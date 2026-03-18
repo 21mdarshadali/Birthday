@@ -116,7 +116,7 @@
             font-size: 1.1rem;
             color: #ff7eb3;
             font-weight: 500;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
 
         .timer-grid {
@@ -201,6 +201,45 @@
                 font-size: 1.3rem;
             }
         }
+
+        /* 🔥 Button Pulse Animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 118, 140, 0.6);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(255, 118, 140, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 118, 140, 0);
+            }
+        }
+
+        /* Apply animation */
+        #celebrate-btn {
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        /* Only when visible */
+        #celebrate-btn.active {
+            animation: pulse 2s infinite;
+        }
+
+        /* Hover effect */
+        #celebrate-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        /* Click effect */
+        #celebrate-btn:active {
+            transform: scale(0.95);
+        }
     </style>
     <style>
         body {
@@ -220,6 +259,7 @@
                     </div>
                     <h1 class="countdown-title">Enjoy your special day</h1>
                     <p class="countdown-subtitle" id="person-display">Celebrate with Someone Special</p>
+                    <p id="birthday-date" style="font-size: 0.9rem; color: #999;margin-bottom: 10px;"></p>
                     <div class="timer-grid">
                         <div class="timer-box"><span class="counter-digit" id="days-count">00</span>
                             <div class="counter-label">
@@ -254,7 +294,7 @@
     cursor: pointer;
     font-size: 14px;
 ">
-                        🎉 Let's Celebrate
+                        🎉 Let's Celebrate➡️
                     </button>
                     <div class="celebration-icons"><span>🎈</span> <span>✨</span> <span>🎉</span>
                     </div>
@@ -264,9 +304,9 @@
     </div>
     <script>
         const defaultConfig = {
-            person_name: "Sania Ali",
+            person_name: "MD ARSHAD ALI",
             birth_month: 3,
-            birth_day: 19
+            birth_day: 26
         };
 
         let config = { ...defaultConfig };
@@ -293,11 +333,25 @@
 
         function updateDisplay() {
             const nameDisplay = document.getElementById('person-display');
+            const dateDisplay = document.getElementById('birthday-date');
+
+            const birthMonth = parseInt(config.birth_month);
+            const birthDay = parseInt(config.birth_day);
+
+            // 👉 Month names
+            const months = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
             if (config.person_name && config.person_name.trim()) {
                 nameDisplay.textContent = `🎈 ${config.person_name}'s Birthday 🎈`;
             } else {
                 nameDisplay.textContent = "Celebrate with Someone Special";
             }
+
+            // 👉 Show formatted date
+            dateDisplay.textContent = `🎂 ${birthDay} ${months[birthMonth - 1]}`;
         }
 
         function calculateCountdown() {
@@ -350,7 +404,7 @@
                 statusEl.textContent = "🎊 It's Birthday Time! 🎊";
 
                 btn.style.display = "inline-block";
-
+                btn.classList.add("active");
                 if (!hasCelebrated) {
                     createConfetti();   // 🎉 only once
                     hasCelebrated = true;
@@ -359,6 +413,7 @@
             } else {
                 statusEl.textContent = "Until the big day!";
                 btn.style.display = "none";
+                btn.classList.remove("active");
                 hasCelebrated = false;
             }
         }
